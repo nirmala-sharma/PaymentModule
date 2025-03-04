@@ -1,9 +1,35 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGatewayMockAPI", "PaymentGatewayMockAPI\PaymentGatewayMockAPI.csproj", "{1F375868-3988-4B6F-A93C-43D67406F837}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "paymentgatewayapp.client", "PaymentGatewayApp\paymentgatewayapp.client\paymentgatewayapp.client.esproj", "{A6AC9B7E-4C8C-2221-3B8E-CB4C654A8BAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentGatewayApp.Server", "PaymentGatewayApp\PaymentGatewayApp.Server\PaymentGatewayApp.Server.csproj", "{0FB348F9-7CFB-406D-8066-4C7EB027E537}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1F375868-3988-4B6F-A93C-43D67406F837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F375868-3988-4B6F-A93C-43D67406F837}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F375868-3988-4B6F-A93C-43D67406F837}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F375868-3988-4B6F-A93C-43D67406F837}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6AC9B7E-4C8C-2221-3B8E-CB4C654A8BAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6AC9B7E-4C8C-2221-3B8E-CB4C654A8BAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6AC9B7E-4C8C-2221-3B8E-CB4C654A8BAD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{A6AC9B7E-4C8C-2221-3B8E-CB4C654A8BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6AC9B7E-4C8C-2221-3B8E-CB4C654A8BAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6AC9B7E-4C8C-2221-3B8E-CB4C654A8BAD}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{0FB348F9-7CFB-406D-8066-4C7EB027E537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FB348F9-7CFB-406D-8066-4C7EB027E537}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FB348F9-7CFB-406D-8066-4C7EB027E537}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FB348F9-7CFB-406D-8066-4C7EB027E537}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

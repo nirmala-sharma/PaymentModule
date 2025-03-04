@@ -1,0 +1,6 @@
+@PaymentGatewayMockAPI_HostAddress = http://localhost:5299
+
+GET {{PaymentGatewayMockAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
