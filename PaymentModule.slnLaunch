@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "PaymentGatewayMockAPI\\PaymentGatewayMockAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "PaymentGatewayApp\\PaymentGatewayApp.Server\\PaymentGatewayApp.Server.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
