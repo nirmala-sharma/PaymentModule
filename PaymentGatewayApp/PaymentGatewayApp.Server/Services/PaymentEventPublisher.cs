@@ -24,13 +24,14 @@ namespace PaymentGatewayApp.Server.Services
         public PaymentEventPublisher(IModel channel)
         {
             _channel = channel;
-            // Set up our message highways (Queues are like Mailbox with realworld analogy)
+            // Set up our message highways (Queues are like Mailbox for realworld analogy)
             _channel.QueueDeclare(queue: _requestQueueName, durable: false, exclusive: false, autoDelete: false, arguments: null); // Request Queue (Outbound lane)
             _channel.QueueDeclare(queue: _responseQueueName, durable: false, exclusive: false, autoDelete: false, arguments: null); // Response Queue (Return lane)
         }
 
-        public async Task<string> PublishPaymentEvent(PaymentRequests request, string correlationId)
+        public async Task<string> PublishPaymentEvent(PaymentRequests request)
         {
+            var correlationId = Guid.NewGuid().ToString();
             // Package our message with return address
             var properties = _channel.CreateBasicProperties();
             properties.ReplyTo = _responseQueueName;  // "Reply to this address"
@@ -52,9 +53,13 @@ namespace PaymentGatewayApp.Server.Services
                 }
             };
             // Start checking the mailbox
-            _channel.BasicConsume(queue: _responseQueueName, autoAck: true, consumer: consumer);  //  autoAck: true : Automatic thank-you notes
+            var consumerTag = _channel.BasicConsume(queue: _responseQueueName, autoAck: true, consumer: consumer);  //  autoAck: true : Automatic thank-you notes
             // Wait patiently for our special letter
-            return await tcs.Task;
+            var result = await tcs.Task;
+            // Once the publisher consume the message then it Stop sending messages to this specific consumer , Basically it was done because
+            // correlationId again updated to previous correlationId not the latest one so it is not giving the output
+            _channel.BasicCancel(consumerTag);  
+            return result;
         }
     }
 }

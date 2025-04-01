@@ -22,8 +22,8 @@ namespace PaymentGatewayApp.Server.Controllers
         {
             try
             {
-                var correlationId = Guid.NewGuid().ToString();
-                var eventResponse = await _eventPublisher.PublishPaymentEvent(request, correlationId);
+                
+                var eventResponse = await _eventPublisher.PublishPaymentEvent(request);
 
 
                 if (string.IsNullOrEmpty(eventResponse))
