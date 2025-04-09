@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PaymentGatewayApp.Server.Interfaces;
@@ -6,6 +7,7 @@ using PaymentGatewayApp.Server.Requests;
 
 namespace PaymentGatewayApp.Server.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PaymentController : ControllerBase
