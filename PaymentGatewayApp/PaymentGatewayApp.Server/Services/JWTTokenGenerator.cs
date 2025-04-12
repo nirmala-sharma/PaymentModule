@@ -19,16 +19,16 @@ namespace PaymentGatewayApp.Server.Services
         public string GenerateToken(User user)
         {
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)), SecurityAlgorithms.HmacSha256);
-            /*  var claims = new Claim[]
-              {
+            var claims = new Claim[]
+            {
               new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
               new Claim(ClaimTypes.UserData, user.UserName.ToString()),
-              };*/
+            };
             var securityToken = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
-                  //  claims: claims,
-                  expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
                 signingCredentials: signingCredentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(securityToken);

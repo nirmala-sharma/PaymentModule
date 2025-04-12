@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PaymentGatewayApp.Server.Configurations;
@@ -10,6 +8,7 @@ using PaymentGatewayApp.Server.Services;
 using RabbitMQ.Client;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using PaymentGatewayApp.Server.DatabaseContext;
 
 namespace PaymentGatewayApp.Server.Dependencies
 {
@@ -18,6 +17,7 @@ namespace PaymentGatewayApp.Server.Dependencies
         public static IServiceCollection AddService(this IServiceCollection services, ConfigurationManager configuration)
         {
             services.AddSwaggerConfiguration();
+            services.AddDatabaseProvider(configuration);
             services.AddAuth(configuration);
             services.AddRabbmitMQConfiguration(configuration);
 
@@ -122,6 +122,13 @@ namespace PaymentGatewayApp.Server.Dependencies
 
             return services;
         }
-
+        public static IServiceCollection AddDatabaseProvider(this IServiceCollection services, ConfigurationManager configuration)
+        {
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            });
+            return services;
+        }
     }
 }

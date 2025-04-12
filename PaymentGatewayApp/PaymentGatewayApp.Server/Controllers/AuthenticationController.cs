@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PaymentGatewayApp.Server.Interfaces;
-using PaymentGatewayApp.Server.Model;
 using PaymentGatewayApp.Server.Requests;
 
 namespace PaymentGatewayApp.Server.Controllers
@@ -11,16 +10,26 @@ namespace PaymentGatewayApp.Server.Controllers
     [AllowAnonymous]
     public class AuthenticationController : ControllerBase
     {
+        private readonly IAuthenticationService _authenticationService;
         private readonly IJWTTokenGenerator _tokenGenerator;
-        public AuthenticationController(IJWTTokenGenerator tokenGenerator)
+        public AuthenticationController(IAuthenticationService authenticationService, IJWTTokenGenerator tokenGenerator)
         {
+            _authenticationService = authenticationService;
             _tokenGenerator = tokenGenerator;
         }
         [HttpPost("Login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
-            User user = new User();
-            // user authentication logic here
+            await Task.CompletedTask;
+            var user = await _authenticationService.GetUserByUserName(loginRequest.UserName);
+            if (user is null)
+            {
+                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "User not found.");
+            }
+            if(user.PasswordHash != loginRequest.Password)
+            {
+                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "User not found.");
+            }
 
             var token = _tokenGenerator.GenerateToken(user);
             var response = new AuthenticationResponse(user, token);
