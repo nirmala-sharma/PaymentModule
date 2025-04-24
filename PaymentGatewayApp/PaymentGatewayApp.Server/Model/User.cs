@@ -7,5 +7,6 @@
         public string PasswordHash { get; set; } = string.Empty;
         public DateTime CreatedOn { get; set; }
         public List<Transaction>? Transactions { get; set; }
+        public List<RefreshToken> RefreshTokens { get; set; }
     }
 }

@@ -5,11 +5,11 @@ namespace PaymentGatewayApp.Server.DatabaseContext
 {
     public class ApplicationDbContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
+        public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshToken { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,6 +65,21 @@ namespace PaymentGatewayApp.Server.DatabaseContext
                     .HasMaxLength(20);
 
                 entity.Property(t => t.CreatedOn)
+                    .IsRequired();
+            });
+            modelBuilder.Entity<RefreshToken>(entity =>
+            {
+                entity.HasKey(u => u.Id);
+
+                entity.Property(u => u.Token)
+                    .IsRequired();
+
+                entity
+               .HasOne(rt => rt.User)
+               .WithMany(u => u.RefreshTokens)
+               .HasForeignKey(rt => rt.UserId);
+
+                entity.Property(u => u.UserId)
                     .IsRequired();
             });
         }

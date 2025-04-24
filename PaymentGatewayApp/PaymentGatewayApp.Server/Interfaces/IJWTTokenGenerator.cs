@@ -4,6 +4,6 @@ namespace PaymentGatewayApp.Server.Interfaces
 {
     public interface IJWTTokenGenerator
     {
-        string GenerateToken(User user);
+        Task<(string accessToken, string refreshToken)> GenerateToken(User user);
     }
 }

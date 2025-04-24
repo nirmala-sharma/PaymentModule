@@ -2,6 +2,6 @@
 
 namespace PaymentGatewayApp.Server.Requests
 {
-    public record AuthenticationResponse(User user,string token);
+    public record AuthenticationResponse(Guid userId, string accessToken, string refreshToken);
 }
 
