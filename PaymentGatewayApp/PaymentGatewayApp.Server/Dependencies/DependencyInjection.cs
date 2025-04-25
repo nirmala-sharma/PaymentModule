@@ -28,7 +28,7 @@ namespace PaymentGatewayApp.Server.Dependencies
             var jwtSettings = new JWTSettings();
             configuration.Bind(JWTSettings.SectionName, jwtSettings);
             services.AddSingleton(Options.Create(jwtSettings));
-            services.AddSingleton<IJWTTokenGenerator, JWTTokenGenerator>();
+            services.AddTransient<IJWTTokenGenerator, JWTTokenGenerator>();
             services.AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters()
             {
                 ValidateIssuer = true,
