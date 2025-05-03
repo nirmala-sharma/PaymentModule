@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  apiUrl: 'https://localhost:44341/api',
+  appName: 'Payment App'
 };
