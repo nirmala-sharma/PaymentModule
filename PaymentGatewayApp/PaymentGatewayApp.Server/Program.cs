@@ -8,15 +8,17 @@ builder.Services.AddService(builder.Configuration);
 
 builder.Services.AddControllers();
 
+// Configure CORS to allow requests from the Angular client app during development.
+// This enables cross-origin communication between the frontend and backend.
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularClient",
         policy =>
         {
-            policy.WithOrigins("http://localhost:65283") // Adjust if needed
-                  .AllowAnyMethod()
-                  .AllowAnyHeader()
-                  .AllowCredentials(); // Needed if using cookies or authentication
+            policy.WithOrigins("http://localhost:65283") // Frontend dev server URL
+                  .AllowAnyMethod()                      // Allow all HTTP methods (GET, POST, etc.)
+                  .AllowAnyHeader()                      // Allow any HTTP headers
+                  .AllowCredentials();                   // Support sending cookies or auth headers
         });
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -46,17 +48,22 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+// Map API controller endpoints so they can be accessed by the frontend
 app.UseEndpoints(endpoint =>
 {
     endpoint.MapControllers();
-}); 
+});
+
+// Integrate Angular SPA with the backend during development.
+// This ensures that running the backend also serves or proxies the frontend.
 app.UseSpa(spa =>
 {
-    spa.Options.SourcePath = "../paymentgatewayapp.client"; // path to your Angular app
+    spa.Options.SourcePath = "../paymentgatewayapp.client"; // Path to Angular project
 
     if (app.Environment.IsDevelopment())
     {
-        spa.UseProxyToSpaDevelopmentServer("http://localhost:65283"); 
+        // Proxy Angular dev server during development for live reload and fast builds
+        spa.UseProxyToSpaDevelopmentServer("http://localhost:65283");
     }
 });
 app.Run();
