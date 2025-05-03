@@ -11,8 +11,8 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace PaymentGatewayApp.Server.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     [AllowAnonymous]
     public class AuthenticationController : ControllerBase
     {
