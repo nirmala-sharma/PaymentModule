@@ -15,7 +15,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngularClient",
         policy =>
         {
-            policy.WithOrigins("http://localhost:65283") // Frontend dev server URL
+            policy.WithOrigins("http://localhost:60371") // Frontend dev server URL
                   .AllowAnyMethod()                      // Allow all HTTP methods (GET, POST, etc.)
                   .AllowAnyHeader()                      // Allow any HTTP headers
                   .AllowCredentials();                   // Support sending cookies or auth headers
@@ -63,7 +63,7 @@ app.UseSpa(spa =>
     if (app.Environment.IsDevelopment())
     {
         // Proxy Angular dev server during development for live reload and fast builds
-        spa.UseProxyToSpaDevelopmentServer("http://localhost:65283");
+        spa.UseProxyToSpaDevelopmentServer("http://localhost:60371");
     }
 });
 app.Run();
