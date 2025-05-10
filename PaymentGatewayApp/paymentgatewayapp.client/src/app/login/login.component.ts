@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ApiService } from '../service/api.service';
+import { AuthService } from '../service/authentication.service';
+import { TokenRequest_DTO } from '../DTOs/token-request.dto';
 
 @Component({
     selector: 'app-login',
@@ -10,7 +12,9 @@ import { ApiService } from '../service/api.service';
 export class LoginComponent implements OnInit {
 
     loginForm!: FormGroup;
-    constructor(private fb: FormBuilder, private router: Router, private apiService: ApiService) {
+    IsPaymentAllowed: boolean = false;
+    token: TokenRequest_DTO = new TokenRequest_DTO();
+    constructor(private fb: FormBuilder, private router: Router, private apiService: ApiService, public authService: AuthService) {
         this.loginForm = this.fb.group({
             UserName: ['', [Validators.required]],
             Password: ['', [Validators.required, Validators.minLength(6)]]
@@ -25,9 +29,9 @@ export class LoginComponent implements OnInit {
             this.apiService.Login(this.loginForm.value).subscribe({
                 next: (response: any) => {
                     if (response && response.accessToken) {
-                        console.log(response);
-                        // this.authService.login(response.accessToken);
-                        // this.router.navigate(['/dashboard']);
+                        this.token = response;
+                        this.authService.setToken(response.accessToken, response.refreshToken);
+                        this.IsPaymentAllowed = true;
                     } else {
                         alert('Invalid login response');
                     }
@@ -38,6 +42,4 @@ export class LoginComponent implements OnInit {
             });
         }
     }
-
-
 }
