@@ -41,14 +41,15 @@ namespace PaymentGatewayApp.Server.Controllers
             }
 
             (string accessToken, string refreshToken) = await _tokenGenerator.GenerateToken(user);
-            var response = new AuthenticationResponse(user.UserId,accessToken,refreshToken);
-            return Ok(response);
+            setRefreshTokenToCookie(refreshToken);
+            return Ok(new { accessToken });
         }
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken(TokenRequest request)
         {
+            var refreshToken = Request.Cookies["refreshToken"];
             var storedToken = await _context.RefreshToken
-                .FirstOrDefaultAsync(x => x.Token == request.RefreshToken);
+                .FirstOrDefaultAsync(x => x.Token == refreshToken);
 
             if (storedToken == null || storedToken.IsUsed || storedToken.IsRevoked || storedToken.ExpiresAt < DateTime.UtcNow)
                 return Unauthorized("Invalid Refresh Token");
@@ -63,13 +64,24 @@ namespace PaymentGatewayApp.Server.Controllers
             await _context.SaveChangesAsync();
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == storedToken.UserId);
-             (string newAccessToken, string newRefreshToken) = await _tokenGenerator.GenerateToken(user);
+            (string newAccessToken, string newRefreshToken) = await _tokenGenerator.GenerateToken(user);
+            setRefreshTokenToCookie(newRefreshToken);
 
-            return Ok(new
+            return Ok(new { newAccessToken });
+        }
+        private void setRefreshTokenToCookie(string refreshToken)
+        {
+            // Set refresh token in HTTP-only cookie
+            var cookieOptions = new CookieOptions
             {
-                accessToken = newAccessToken,
-                refreshToken = newRefreshToken
-            });
+                HttpOnly = true,
+                Secure = true, // Ensure HTTPS in production
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7)
+            };
+
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+
         }
     }
 }

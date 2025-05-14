@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../service/api.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-payment-process',
@@ -12,7 +13,7 @@ export class PaymentProcessComponent implements OnInit {
     SelectedPaymentMode: string = '';
     @Output('payment-response-callback') PaymentResponseCallBack = new EventEmitter<object>();
 
-    constructor(private fb: FormBuilder, private apiService: ApiService) {
+    constructor(private fb: FormBuilder, private apiService: ApiService, private sanitizer: DomSanitizer) {
         this.checkoutForm = this.fb.group({
             FullName: ['', Validators.required],
             Email: ['', [Validators.required, Validators.email]],
@@ -31,7 +32,9 @@ export class PaymentProcessComponent implements OnInit {
             this.UpdateFormValidators();
         });
     }
-
+    // getSanitizedHtml(): SafeHtml {
+    //     return this.sanitizer.bypassSecurityTrustHtml(this.checkoutForm.get('FullName')?.value || '');
+    // }
     UpdateFormValidators(): void {
         const cardNumberControl = this.checkoutForm.get('CardNumber');
         const expiryDateControl = this.checkoutForm.get('ExpiryDate');

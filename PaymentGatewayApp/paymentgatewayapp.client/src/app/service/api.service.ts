@@ -18,8 +18,8 @@ export class ApiService {
     processPayment(paymentData: any): Observable<any> {
         return this.http.post(`${this.apiUrl}/Payment/ProcessPayment`, paymentData);
     }
-    getNewToken(tokens: TokenRequest_DTO): Observable<any> {
-        return this.http.post(`${this.apiUrl}/Authentication/refresh-token`, tokens);
+    getNewToken(token: TokenRequest_DTO): Observable<any> {
+        return this.http.post(`${this.apiUrl}/Authentication/refresh-token`, token);
     }
     
 }

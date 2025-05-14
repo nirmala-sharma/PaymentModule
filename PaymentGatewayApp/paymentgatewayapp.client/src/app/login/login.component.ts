@@ -29,8 +29,8 @@ export class LoginComponent implements OnInit {
             this.apiService.Login(this.loginForm.value).subscribe({
                 next: (response: any) => {
                     if (response && response.accessToken) {
-                        this.token = response;
-                        this.authService.setToken(response.accessToken, response.refreshToken);
+                        this.token.AccessToken = response.accessToken;
+                        this.authService.setToken(response.accessToken);
                         this.IsPaymentAllowed = true;
                     } else {
                         alert('Invalid login response');
