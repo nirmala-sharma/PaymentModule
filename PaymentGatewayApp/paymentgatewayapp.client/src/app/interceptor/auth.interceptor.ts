@@ -43,38 +43,37 @@ export class AuthInterceptor implements HttpInterceptor {
             this.refreshTokenSubject.next(null);
 
             const tokenRequest: TokenRequest_DTO = {
-                AccessToken: this.authService.getAccessToken(),
-                RefreshToken: this.authService.getRefreshToken()
+                AccessToken: this.authService.getAccessToken()
             };
 
-            return this.authService.FetchRefreshToken(tokenRequest).pipe(
-                switchMap((res: any) => {
-                    if (res && res.accessToken) {
+            return this.authService.FetchRefreshToken(tokenRequest).
+                pipe(
+                    catchError(err => {
                         this.isRefreshing = false;
-                        this.authService.setToken(res.accessToken, res.refreshToken); // Save new tokens
-                        this.refreshTokenSubject.next(res.accessToken);
+                        this.handleAuthError(); // Only runs if refresh fails
+                        return throwError(() => err);
+                    }),
+                    switchMap((res: any) => {
+                        if (res && res.newAccessToken) {
+                            this.isRefreshing = false;
+                            this.authService.setToken(res.newAccessToken); // Save new tokens
+                            this.refreshTokenSubject.next(res.newAccessToken);
 
-                        // Retry the original request with new token
-                        const retryReq = req.clone({
-                            setHeaders: {
-                                Authorization: `Bearer ${res.accessToken}`
-                            }
-                        });
+                            // Retry the original request with new token
+                            const retryReq = req.clone({
+                                setHeaders: {
+                                    Authorization: `Bearer ${res.newAccessToken}`
+                                }
+                            });
 
-                        return next.handle(retryReq);
-                    } else {
-                        // Invalid response - maybe no access token
-                        this.handleAuthError();
-                        return throwError(() => new Error('Invalid token refresh response'));
-                    }
-                })
-            ).pipe(
-                catchError(err => {
-                    // This catchError only triggers if refresh fails
-                    this.handleAuthError();
-                    return throwError(() => err);
-                })
-            );
+                            return next.handle(retryReq);
+                        } else {
+                            // Invalid response - maybe no access token
+                            this.handleAuthError();
+                            return throwError(() => new Error('Invalid token refresh response'));
+                        }
+                    })
+                );
         } else {
             // Wait for the refreshing process to complete
             return this.refreshTokenSubject.pipe(

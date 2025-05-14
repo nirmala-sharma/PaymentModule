@@ -11,6 +11,7 @@
                             <div *ngIf="checkoutForm.get('FullName')?.invalid && checkoutForm.get('FullName')?.touched" class="text-danger">
                                 Name is required.
                             </div>
+                            <!-- <div [innerHTML]="getSanitizedHtml()"></div> -->
                         </div>
                         <div class="mb-1">
                             <label>Email</label>

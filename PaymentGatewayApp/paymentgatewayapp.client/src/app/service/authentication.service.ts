@@ -9,19 +9,18 @@ import { TokenRequest_DTO } from '../DTOs/token-request.dto';
 })
 export class AuthService {
     private isAuthenticated = false;
-    private isLoggedInSubject = new BehaviorSubject<boolean>(!!localStorage.getItem('authToken'));
+    private isLoggedInSubject = new BehaviorSubject<boolean>(!!sessionStorage.getItem('authToken'));
     isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
     constructor(private router: Router, private apiService: ApiService) { }
 
     CheckIfUserAuthenticated(): boolean {
-        const token = localStorage.getItem('accessToken');
+        const token = sessionStorage.getItem('accessToken');
         return this.isAuthenticated = token ? true : false;
     }
 
-    setToken(accessToken: string, refreshToken: string) {
-        localStorage.setItem('accessToken', accessToken);
-        localStorage.setItem('refreshToken', refreshToken);
+    setToken(accessToken: string) {
+        sessionStorage.setItem('accessToken', accessToken);
         this.isLoggedInSubject.next(true);
     }
     logout(): void {
@@ -35,16 +34,13 @@ export class AuthService {
     }
 
     getAccessToken() {
-        return localStorage.getItem('accessToken');
-    }
-    getRefreshToken() {
-        return localStorage.getItem('refreshToken');
+        return sessionStorage.getItem('accessToken');
     }
     FetchRefreshToken(TokenRequest: TokenRequest_DTO): Observable<any> {
         return this.apiService.getNewToken(TokenRequest).pipe(
             tap((response: any) => {
-                if (response && response.accessToken) {
-                    this.setToken(response.accessToken, response.refreshToken);
+                if (response) {
+                    this.setToken(response);
                 } else {
                     alert('Invalid Token');
                 }
@@ -56,7 +52,6 @@ export class AuthService {
         );
     }
     clearTokens() {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        sessionStorage.removeItem('accessToken');
     }
 }
