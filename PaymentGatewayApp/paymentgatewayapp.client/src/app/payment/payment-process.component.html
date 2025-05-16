@@ -1,90 +1,111 @@
+<style>
+    .mb-3 {
+        margin-bottom: 10px;
+    }
+</style>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="">
-            <div class="card">
-                <div class="card-body">
-                    <h3 class="text-center">Payment Checkout</h3>
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow rounded-4">
+                <div class="card-body p-4">
+                    <h3 class="text-center mb-4 text-primary">Complete Your Payment</h3>
+
                     <form [formGroup]="checkoutForm" (ngSubmit)="submitPayment()">
-                        <div class="mb-1">
-                            <label>Customer Name</label>
-                            <input type="text" class="form-control" formControlName="FullName">
+
+                        <div class="mb-3">
+                            <label class="form-label">Customer Name<span>:</span></label>
+                            <input type="text" class="form-control" formControlName="FullName" placeholder="Enter your full name">
                             <div *ngIf="checkoutForm.get('FullName')?.invalid && checkoutForm.get('FullName')?.touched" class="text-danger">
                                 Name is required.
                             </div>
-                            <!-- <div [innerHTML]="getSanitizedHtml()"></div> -->
                         </div>
-                        <div class="mb-1">
-                            <label>Email</label>
-                            <input type="email" class="form-control" formControlName="Email">
+                        <!-- <div [innerHTML]="getSanitizedHtml()"></div> -->
+                        <div class="mb-3">
+                            <label class="form-label">Email<span>:</span></label>
+                            <input type="email" class="form-control" formControlName="Email" placeholder="example@email.com">
                             <div *ngIf="checkoutForm.get('Email')?.invalid && checkoutForm.get('Email')?.touched" class="text-danger">
                                 Valid Email is required.
                             </div>
                         </div>
-                        <div class="mb-1">
-                            <label>Currency</label>
-                            <input type="text" class="form-control" formControlName="Currency">
+
+                        <div class="mb-3">
+                            <label class="form-label">Currency<span>:</span></label>
+                            <input type="text" class="form-control" formControlName="Currency" placeholder="e.g. USD, INR">
                             <div *ngIf="checkoutForm.get('Currency')?.invalid && checkoutForm.get('Currency')?.touched" class="text-danger">
                                 Currency is required.
                             </div>
                         </div>
-                        <div class="mb-1">
-                            <label>Amount</label>
-                            <input type="text" class="form-control" formControlName="Amount">
+
+                        <div class="mb-3">
+                            <label class="form-label">Amount<span>:</span></label>
+                            <input type="text" class="form-control" formControlName="Amount" placeholder="Enter amount">
                             <div *ngIf="checkoutForm.get('Amount')?.invalid && checkoutForm.get('Amount')?.touched" class="text-danger">
                                 Amount is required.
                             </div>
                         </div>
+
                         <div class="mb-3">
-                            <label for="paymentMode">Payment Mode:</label>
-                            <select class="form-control" id="paymentMode" formControlName="PaymentMode" required>
+                            <label class="form-label">Payment Mode<span>:</span></label>
+                            <select class="form-select" formControlName="PaymentMode" required>
                                 <option value="">Select Payment Mode</option>
                                 <option *ngFor="let mode of PaymentModes" [value]="mode">{{ mode }}</option>
                             </select>
                             <div *ngIf="checkoutForm.get('PaymentMode')?.invalid && checkoutForm.get('PaymentMode')?.touched" class="text-danger">
-                                PaymentMode is required.
+                                Payment mode is required.
                             </div>
                         </div>
-                        <div class="mb-3" *ngIf="SelectedPaymentMode === 'Card'">
-                            <div class="mb-1">
-                                <label>Card Number</label>
-                                <input type="number" class="form-control" formControlName="CardNumber">
+
+                        <!-- Card Payment Section -->
+                        <div *ngIf="SelectedPaymentMode === 'Card'">
+                            <div class="mb-3">
+                                <label class="form-label">Card Number<span>:</span></label>
+                                <input type="number" class="form-control" formControlName="CardNumber" placeholder="1234 5678 9012 3456">
                                 <div *ngIf="checkoutForm.get('CardNumber')?.invalid && checkoutForm.get('CardNumber')?.touched" class="text-danger">
                                     Card Number must be 16 digits.
                                 </div>
                             </div>
-                            <div class="mb-1">
-                                <label>Expiry Date (MM/YY)</label>
-                                <input type="text" class="form-control" formControlName="ExpiryDate">
-                                <div *ngIf="checkoutForm.get('ExpiryDate')?.invalid && checkoutForm.get('ExpiryDate')?.touched" class="text-danger">
-                                    Format: MM/YY
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Expiry Date (MM/YY)<span>:</span></label>
+                                    <input type="text" class="form-control" formControlName="ExpiryDate" placeholder="MM/YY">
+                                    <div *ngIf="checkoutForm.get('ExpiryDate')?.invalid && checkoutForm.get('ExpiryDate')?.touched" class="text-danger">
+                                        Format: MM/YY
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="mb-1">
-                                <label>CVV</label>
-                                <input type="number" class="form-control" formControlName="CVV">
-                                <div *ngIf="checkoutForm.get('CVV')?.invalid && checkoutForm.get('CVV')?.touched" class="text-danger">
-                                    CVV must be 3 digits.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3" *ngIf="SelectedPaymentMode === 'Bank'">
-                            <div class="mb-1">
-                                <label>Bank Name</label>
-                                <input type="text" class="form-control" formControlName="BankName">
-                                <div *ngIf="checkoutForm.get('BankName')?.invalid && checkoutForm.get('BankName')?.touched" class="text-danger">
-                                    Bank Name is required.
-                                </div>
-                            </div>
-                            <div class="mb-1">
-                                <label>Account Number</label>
-                                <input type="text" class="form-control" formControlName="AccountNumber">
-                                <div *ngIf="checkoutForm.get('AccountNumber')?.invalid && checkoutForm.get('AccountNumber')?.touched" class="text-danger">
-                                    AccountNumber is required.
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">CVV<span>:</span></label>
+                                    <input type="number" class="form-control" formControlName="CVV" placeholder="123">
+                                    <div *ngIf="checkoutForm.get('CVV')?.invalid && checkoutForm.get('CVV')?.touched" class="text-danger">
+                                        CVV must be 3 digits.
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <button class="btn btn-success w-100" [disabled]="checkoutForm.invalid">Pay</button>
+                        <!-- Bank Payment Section -->
+                        <div *ngIf="SelectedPaymentMode === 'Bank'">
+                            <div class="mb-3">
+                                <label class="form-label">Bank Name<span>:</span></label>
+                                <input type="text" class="form-control" formControlName="BankName" placeholder="Your Bank Name">
+                                <div *ngIf="checkoutForm.get('BankName')?.invalid && checkoutForm.get('BankName')?.touched" class="text-danger">
+                                    Bank Name is required.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Account Number<span>:</span></label>
+                                <input type="text" class="form-control" formControlName="AccountNumber" placeholder="Your Account Number">
+                                <div *ngIf="checkoutForm.get('AccountNumber')?.invalid && checkoutForm.get('AccountNumber')?.touched" class="text-danger">
+                                    Account Number is required.
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success w-100 mt-3" [disabled]="checkoutForm.invalid">Pay</button>
+
                     </form>
                 </div>
             </div>

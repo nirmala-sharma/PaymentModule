@@ -12,7 +12,6 @@ import { TokenRequest_DTO } from '../DTOs/token-request.dto';
 export class LoginComponent implements OnInit {
 
     loginForm!: FormGroup;
-    IsPaymentAllowed: boolean = false;
     token: TokenRequest_DTO = new TokenRequest_DTO();
     constructor(private fb: FormBuilder, private router: Router, private apiService: ApiService, public authService: AuthService) {
         this.loginForm = this.fb.group({
@@ -31,7 +30,7 @@ export class LoginComponent implements OnInit {
                     if (response && response.accessToken) {
                         this.token.AccessToken = response.accessToken;
                         this.authService.setToken(response.accessToken);
-                        this.IsPaymentAllowed = true;
+                        this.router.navigate(['/payment']);
                     } else {
                         alert('Invalid login response');
                     }
