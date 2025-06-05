@@ -1,4 +1,5 @@
 using PaymentGatewayApp.Server.Dependencies;
+using PaymentGatewayApp.Server.Middlewares;
 using PaymentGatewayApp.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +48,7 @@ app.UseCors("AllowAngularClient");
 app.UseAuthentication();
 
 app.UseAuthorization();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Map API controller endpoints so they can be accessed by the frontend
 app.UseEndpoints(endpoint =>
