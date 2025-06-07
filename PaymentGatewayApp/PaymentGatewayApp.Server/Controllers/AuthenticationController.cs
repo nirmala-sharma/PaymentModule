@@ -19,16 +19,19 @@ namespace PaymentGatewayApp.Server.Controllers
         private readonly IAuthenticationService _authenticationService;
         private readonly IJWTTokenGenerator _tokenGenerator;
         private readonly ApplicationDbContext _context;
-        public AuthenticationController(IAuthenticationService authenticationService, IJWTTokenGenerator tokenGenerator, ApplicationDbContext context)
+        private readonly ILogger<AuthenticationController> _logger;
+        public AuthenticationController(IAuthenticationService authenticationService, IJWTTokenGenerator tokenGenerator, ApplicationDbContext context, ILogger<AuthenticationController> logger)
         {
             _authenticationService = authenticationService;
             _tokenGenerator = tokenGenerator;
             _context = context;
+            _logger = logger;
 
         }
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
+            _logger.LogInformation("Requesting login ...");
             await Task.CompletedTask;
             var user = await _authenticationService.GetUserByUserName(loginRequest.UserName);
             if (user is null)

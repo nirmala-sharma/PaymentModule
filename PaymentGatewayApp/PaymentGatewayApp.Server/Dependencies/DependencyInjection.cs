@@ -9,6 +9,7 @@ using RabbitMQ.Client;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using PaymentGatewayApp.Server.DatabaseContext;
+using Serilog;
 
 namespace PaymentGatewayApp.Server.Dependencies
 {
@@ -41,6 +42,7 @@ namespace PaymentGatewayApp.Server.Dependencies
             });
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddHttpContextAccessor();
+            services.AddSerilogConfiguration(configuration);
             return services;
         }
         public static void AddSwaggerConfiguration(this IServiceCollection services)
@@ -128,6 +130,18 @@ namespace PaymentGatewayApp.Server.Dependencies
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
+            return services;
+        }
+        /// <summary>
+        /// Configures Serilog and adds it to the service collection.
+        /// </summary>
+        public static IServiceCollection AddSerilogConfiguration(this IServiceCollection services, ConfigurationManager configuration)
+        {
+            // Build Serilog logger from configuration
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration)
+                .CreateLogger();
+            // Register Serilog as the logging provider without disposing it on shutdown
+            services.AddSerilog(Log.Logger, dispose: false);
             return services;
         }
     }
