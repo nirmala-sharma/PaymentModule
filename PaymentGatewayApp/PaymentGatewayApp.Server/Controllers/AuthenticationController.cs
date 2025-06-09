@@ -45,7 +45,8 @@ namespace PaymentGatewayApp.Server.Controllers
 
             (string accessToken, string refreshToken) = await _tokenGenerator.GenerateToken(user);
             setRefreshTokenToCookie(refreshToken);
-            return Ok(new { accessToken });
+            AuthenticationResponse data = new AuthenticationResponse(accessToken);
+            return Ok(data);
         }
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken(TokenRequest request)
