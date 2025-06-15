@@ -30,7 +30,7 @@ namespace PaymentAppTestProject
             _dbContext = new ApplicationDbContext(options);
 
             // Setup mocks
-            _mockAuthService = new Mock<IAuthenticationService>();
+            _mockAuthService = new Mock<IAuthenticationService>();  // Creates a fake version of the IAuthenticationService
             _mockTokenGenerator = new Mock<IJWTTokenGenerator>();
             _mockLogger = new Mock<ILogger<AuthenticationController>>();
 
@@ -53,8 +53,9 @@ namespace PaymentAppTestProject
         public async Task Login_UserNotFound_ReturnsUnauthorized()
         {
             // Arrange
-            var loginRequest = new LoginRequest("niru", "pass"); ;
-            _mockAuthService.Setup(s => s.GetUserByUserName("unknown")).ReturnsAsync((User?)null);
+            var loginRequest = new LoginRequest("niru", "pass"); 
+
+            _mockAuthService.Setup(s => s.GetUserByUserName("niru")).ReturnsAsync((User?)null); // tells it what to return when  GetUserByUserName() method is called
 
             // Act
             var result = await _controller.Login(loginRequest);
@@ -96,7 +97,6 @@ namespace PaymentAppTestProject
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var data = Assert.IsType<AuthenticationResponse>(okResult.Value);
-            //dynamic? data = okResult?.Value;
             Assert.NotNull(data);
             Assert.Equal("access123", data.accessToken);
         }
