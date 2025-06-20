@@ -54,7 +54,7 @@ app.UseRouting();
 app.UseCors("AllowAngularClient");
 // Authenticates the user before checking their permissions.
 app.UseAuthentication();
-
+// Enables authorization middleware to enforce security policies on incoming requests
 app.UseAuthorization();
 //Custom error handling to catch and format exceptions consistently.
 app.UseMiddleware<GlobalExceptionMiddleware>();

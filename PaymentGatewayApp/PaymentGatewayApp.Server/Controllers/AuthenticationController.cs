@@ -32,6 +32,8 @@ namespace PaymentGatewayApp.Server.Controllers
         public async Task<IActionResult> Login(LoginRequest loginRequest)
         {
             _logger.LogInformation("Requesting login ...");
+
+            //throw new HttpRequestException("Simulated failure for retry test");
             await Task.CompletedTask;
             var user = await _authenticationService.GetUserByUserName(loginRequest.UserName);
             if (user is null)
