@@ -11,6 +11,7 @@ namespace DemoPaymentAPI.Controllers
         [HttpPost("ProcessPayment")]
         public async Task<IActionResult> ProcessPayment()
         {
+            //throw new HttpRequestException("Simulated failure for retry test");
             await Task.Delay(3000);
             Random random = new Random();
 
