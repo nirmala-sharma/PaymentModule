@@ -14,16 +14,21 @@ export class AuthInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const accessToken = this.authService.getAccessToken();
-
+       const idempotencyKey = sessionStorage.getItem('idempotencyKey');
+        let headers: { [name: string]: string } = {};
         // Clone and attach access token
-        let authReq = req;
         if (accessToken) {
-            authReq = req.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
+            headers['Authorization'] = `Bearer ${accessToken}`;
         }
+        const isPaymentPost = req.method === 'POST' &&
+            req.url.includes('/Payment/ProcessPayment');
+
+        if (idempotencyKey && isPaymentPost) {
+            headers['Idempotency-Key'] = idempotencyKey;
+        }
+        const authReq = req.clone({
+            setHeaders: headers
+        });
 
         // Proceed with request
         return next.handle(authReq).pipe(

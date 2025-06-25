@@ -32,6 +32,8 @@ export class PaymentProcessComponent implements OnInit {
             this.UpdateFormValidators();
         });
     }
+    ngOnInit(): void {
+    }
     // getSanitizedHtml(): SafeHtml {
     //     return this.sanitizer.bypassSecurityTrustHtml(this.checkoutForm.get('FullName')?.value || '');
     // }
@@ -64,18 +66,21 @@ export class PaymentProcessComponent implements OnInit {
         bankNameControl?.updateValueAndValidity();
     }
 
-    ngOnInit(): void {
-    }
-
-
     submitPayment() {
         if (this.checkoutForm.valid) {
+            let idempotencyKey = sessionStorage.getItem('idempotencyKey');
+
+            // Generate key only if not already present
+            if (!idempotencyKey) {
+                this.generateIdempotentKey();
+            }
             this.apiService.processPayment(this.checkoutForm.value).subscribe({
                 next: (response: any) => {
                     if (response) {
                         alert('Payment Successful');
-                        // this.checkoutForm.reset();
+                        //this.checkoutForm.reset();
                         this.PaymentResponseCallBack.emit();
+                        this.removeIdempotentKey();
                     } else {
                         alert('Invalid login response');
                     }
@@ -85,6 +90,16 @@ export class PaymentProcessComponent implements OnInit {
                 }
             });
         }
+    }
+    ngOnDestroy(): void {
+        this.removeIdempotentKey();
+    }
+    generateIdempotentKey() {
+        const idempotencyKey = crypto.randomUUID();
+        sessionStorage.setItem('idempotencyKey', idempotencyKey);
+    }
+    removeIdempotentKey() {
+        sessionStorage.removeItem('idempotencyKey');
     }
 }
 
