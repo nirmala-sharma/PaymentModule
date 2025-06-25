@@ -10,7 +10,8 @@ namespace PaymentGatewayApp.Server.DatabaseContext
         }
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
-
+        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<IdempotencyKey> IdempotencyKeys { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -81,6 +82,12 @@ namespace PaymentGatewayApp.Server.DatabaseContext
 
                 entity.Property(u => u.UserId)
                     .IsRequired();
+            });
+            modelBuilder.Entity<IdempotencyKey>(entity =>
+            {
+                entity.HasKey(u => u.Id);
+                entity.Property(u => u.ResponseBody)
+                   .IsRequired();
             });
         }
 

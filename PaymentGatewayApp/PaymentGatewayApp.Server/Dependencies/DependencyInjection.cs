@@ -21,6 +21,8 @@ namespace PaymentGatewayApp.Server.Dependencies
             services.AddDatabaseProvider(configuration);
             services.AddAuth(configuration);
             services.AddRabbmitMQConfiguration(configuration);
+            services.AddScoped<IPaymentTransactionService, PaymentTransactionService>();
+            services.AddScoped<IIdempotencyKeyService, IdempotencyKeyService>();
 
             return services;
         }
