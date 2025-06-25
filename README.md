@@ -1,9 +1,60 @@
+**PaymentModule**
+****
+**🌐 Project Overview**
 
-Developed a Payment Module leveraging event-driven architecture to efficiently process payments, integrate with a simulated third-party API, and handle asynchronous events such as transaction status updates.
+This project presents a full-featured payment gateway simulation, built using modern architectural principles and best practices across both backend and frontend.
 
+It includes a robust Payment Module designed with event-driven architecture to efficiently process transactions, seamlessly integrate with a simulated third-party API, and handle asynchronous events such as transaction status updates — all while ensuring reliability, scalability, and resilience.
+
+**This Project Consists of:**
+** **
+**1. PaymentGatewayMockAPI** — A mock third-party payment API to simulate real-world payment processing.
+
+**2. PaymentGatewayWebAPI** – Main backend API handling payment processing, idempotency, transaction logging, and event publishing.
+
+**3. Event-Driven Architecture** — Utilizes RabbitMQ for asynchronous message handling between services.
+
+**4. Authentication & Authorization** — Implements secure user identity management using **JWT-based access and refresh tokens**, ensuring safe and seamless authentication throughout the application.
+
+**5. Logging** — Integrated Serilog for structured and detailed application logs.
+
+**6. Global Exception Handling** — Centralized error handling for consistent API responses.
+
+**7. Retry Policy** — Implements automatic retries using Polly to handle transient failures.
+
+**8. Idempotency Support** — Prevents duplicate payment processing through idempotent request handling.
+
+**9. PaymentGatewayApp (Angular)** — Frontend client built with Angular, supporting secure token management, form submission, and graceful error handling.
+
+**10. Unit Testing** – Includes backend unit tests using xUnit, covering core services and controller logic to ensure reliability.
+
+****
 **Technology Used:**
- **.Net8.0**
+.Net8.0
 , Angular CLI: 14.2.13
 , Node:16.16.0
-,  Typescript: 4.7.4
-,  npm 8.11.0 
+, Typescript: 4.7.4
+, npm 8.11.0 
+
+****
+**⚙️ How to Set Up This Solution :**
+
+1. Clone the project repository to your local machine.
+
+2. Restore all backend dependencies using your IDE or .NET CLI.
+
+3. Update configuration files (appsettings.json) :
+
+ - Database connection string
+
+ - RabbitMQ credentials
+
+ - Serilog logging settings
+
+4. Build and run the .NET solution to automatically create the database and required tables.
+
+5. Install frontend dependencies in the Angular project.
+
+6. Build and run the Angular application 
+
+7. Access the application in your browser and begin testing.
