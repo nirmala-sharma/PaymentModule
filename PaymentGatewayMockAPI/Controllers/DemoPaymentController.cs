@@ -2,6 +2,13 @@
 
 namespace DemoPaymentAPI.Controllers
 {
+    /// <summary>
+    /// Simulates payment processing with a mock third-party payment API.
+    /// - Mimics real-world API behavior by introducing a 3-second delay.
+    /// - Randomly returns transaction statuses such as Success, Pending, or Failed.
+    /// - Useful for testing retry mechanisms, idempotency handling, and payment workflows
+    ///   without relying on a real external service.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class DemoPaymentController : ControllerBase

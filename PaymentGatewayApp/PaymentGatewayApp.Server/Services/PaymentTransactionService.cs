@@ -38,6 +38,12 @@ namespace PaymentGatewayApp.Server.Services
 
                     _dbContext.Transactions.Add(transaction);
                     await _dbContext.SaveChangesAsync();
+
+                    // Intentionally throw an exception after DB save but before commit to simulate a failure scenario.
+                    // Helps test the importance of idempotency in preventing duplicate transactions.
+
+                    // throw new Exception("Simulated exception after saving transaction");
+
                     await dbTransaction.CommitAsync();
                     return transaction;
                 }
