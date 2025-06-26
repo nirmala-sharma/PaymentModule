@@ -28,6 +28,8 @@ It includes a robust Payment Module designed with event-driven architecture to e
 
 **10. Unit Testing** – Includes backend unit tests using xUnit, covering core services and controller logic to ensure reliability.
 
+**11. CORS Support** – Enables secure cross-origin requests between frontend (Angular) and backend (.NET API).
+
 ****
 **Technology Used:**
 .Net8.0
