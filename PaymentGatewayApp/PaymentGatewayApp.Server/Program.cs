@@ -5,6 +5,8 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// Register HttpClientFactory
+builder.Services.AddHttpClient();
 builder.Services.AddService(builder.Configuration);
 
 builder.Services.AddControllers();

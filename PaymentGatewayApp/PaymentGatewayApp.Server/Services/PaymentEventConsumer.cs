@@ -26,17 +26,17 @@ namespace PaymentGatewayApp.Server.Services
     public class PaymentEventConsumer : BackgroundService
     {
         private IConnection _connection;
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly DemoPaymentAPISettings _settings;
         private readonly string _requestQueueName = "thirdPartyApiRequestQueue";
         private readonly string _responseQueueName = "thirdPartyApiResponseQueue";
         private readonly ILogger<PaymentEventConsumer> _logger;
 
 
-        public PaymentEventConsumer(IConnection connection, HttpClient httpClient, IOptions<DemoPaymentAPISettings> settings, ILogger<PaymentEventConsumer> logger)
+        public PaymentEventConsumer(IConnection connection, IHttpClientFactory httpClientFactory, IOptions<DemoPaymentAPISettings> settings, ILogger<PaymentEventConsumer> logger)
         {
             _connection = connection;    // Store the RabbitMQ connection
-            _httpClient = httpClient;    // Store the HTTP client
+            _httpClientFactory = httpClientFactory;   
             _settings = settings.Value;  // Store API settings (e.g., API URL)
             _logger = logger;
         }
@@ -128,8 +128,10 @@ namespace PaymentGatewayApp.Server.Services
                  // Note: ExecuteAsync must be used for awaited asynchronous operations like HttpClient calls.
                  await retryPolicy.ExecuteAsync(async () =>
                 {
+                    var client = _httpClientFactory.CreateClient();
+                    
                     // Step 2: Send the request
-                    HttpResponseMessage response = await _httpClient.PostAsync(thirdPartyApiUrl, jsonContent);
+                    HttpResponseMessage response = await client.PostAsync(thirdPartyApiUrl, jsonContent);
 
                     response.EnsureSuccessStatusCode();
                     // Step 3: Handle errors
