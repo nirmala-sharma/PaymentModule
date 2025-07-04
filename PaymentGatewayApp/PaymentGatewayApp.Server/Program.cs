@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.RateLimiting;
 using PaymentGatewayApp.Server.Dependencies;
 using PaymentGatewayApp.Server.Middlewares;
 using Serilog;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,24 @@ builder.Services.AddHttpClient();
 builder.Services.AddService(builder.Configuration);
 
 builder.Services.AddControllers();
+
+// Configure rate limiting to allow 1 request per minute per IP.
+// If the limit is exceeded, 1 request can wait in queue; others are rejected with 429 status code.
+builder.Services.AddRateLimiter(options => // Register rate limiting services
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests; // Return 429 when limit is exceeded
+    options.AddPolicy("FixedPolicy", context => // Define a named rate limit policy
+        RateLimitPartition.GetFixedWindowLimiter(
+            // Use client IP as partition key and rate limits are applied individually per IP address
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown", 
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 1, // Allow 1 request per window
+                Window = TimeSpan.FromMinutes(1), // Set window duration to 1 minute
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst, // Queue oldest request first
+                QueueLimit = 1 // Allow 1 request to wait in the queue
+            }));
+});
 
 // Configure CORS to allow requests from the Angular client app during development.
 // This enables cross-origin communication between the frontend and backend.
@@ -48,16 +68,25 @@ else
 }
 // Logs HTTP requests early, before processing begins, for better tracking.
 app.UseSerilogRequestLogging();
+
 // Redirects HTTP to HTTPS for security.
 app.UseHttpsRedirection();
+
 // Set-up the routing system—essential before mapping endpoints.
 app.UseRouting();
+
+// Add the rate limiter middleware to intercept and enforce rate limits on incoming requests.
+app.UseRateLimiter();
+
 // Allows cross-origin requests from Angular frontend.
 app.UseCors("AllowAngularClient");
+
 // Authenticates the user before checking their permissions.
 app.UseAuthentication();
+
 // Enables authorization middleware to enforce security policies on incoming requests
 app.UseAuthorization();
+
 //Custom error handling to catch and format exceptions consistently.
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
