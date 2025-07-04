@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
 using PaymentGatewayApp.Server.DatabaseContext;
 using PaymentGatewayApp.Server.Interfaces;
@@ -31,6 +30,7 @@ namespace PaymentGatewayApp.Server.Controllers
             _logger = logger;
         }
 
+        [EnableRateLimiting("FixedPolicy")]
         [HttpPost("ProcessPayment")]
         public async Task<IActionResult> ProcessPayment([FromBody] PaymentRequests request)
         {
@@ -38,7 +38,7 @@ namespace PaymentGatewayApp.Server.Controllers
             {
                 // Validate the presence and integrity of the Idempotency-Key in the request header
                 if (!HttpContext.Request.Headers.TryGetValue("Idempotency-Key", out var idempotencyKey) ||
-    string.IsNullOrWhiteSpace(idempotencyKey))
+                 string.IsNullOrWhiteSpace(idempotencyKey))
                 {
                     return BadRequest(new { Message = "Missing or invalid Idempotency-Key header." });
                 }
