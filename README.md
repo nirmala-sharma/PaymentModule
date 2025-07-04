@@ -30,6 +30,8 @@ It includes a robust Payment Module designed with event-driven architecture to e
 
 **11. CORS Support** – Enables secure cross-origin requests between frontend (Angular) and backend (.NET API).
 
+**12. Rate Limiting** – Applies IP-based request limits using Fixed Window strategy to prevent API overuse. Allows 1 request per minute with 1 queued request, returning HTTP 429 when exceeded.
+
 ****
 **Technology Used:**
 .Net8.0
