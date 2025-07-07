@@ -7,6 +7,7 @@ using PaymentGatewayApp.Server.DatabaseContext;
 using PaymentGatewayApp.Server.Interfaces;
 using PaymentGatewayApp.Server.Model;
 using PaymentGatewayApp.Server.Requests;
+using PaymentGatewayApp.Server.Services;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace PaymentGatewayApp.Server.Controllers
@@ -20,12 +21,14 @@ namespace PaymentGatewayApp.Server.Controllers
         private readonly IJWTTokenGenerator _tokenGenerator;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<AuthenticationController> _logger;
-        public AuthenticationController(IAuthenticationService authenticationService, IJWTTokenGenerator tokenGenerator, ApplicationDbContext context, ILogger<AuthenticationController> logger)
+        private readonly IPasswordHasher _passwordHasher;
+        public AuthenticationController(IAuthenticationService authenticationService, IJWTTokenGenerator tokenGenerator, ApplicationDbContext context, ILogger<AuthenticationController> logger, IPasswordHasher passwordHasher)
         {
             _authenticationService = authenticationService;
             _tokenGenerator = tokenGenerator;
             _context = context;
             _logger = logger;
+            _passwordHasher = passwordHasher;
 
         }
         [HttpPost("Login")]
@@ -40,9 +43,9 @@ namespace PaymentGatewayApp.Server.Controllers
             {
                 return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "User not found.");
             }
-            if (user.PasswordHash != loginRequest.Password)
+            if (!_passwordHasher.VerifyPassword(loginRequest.Password, user.PasswordHash))
             {
-                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "User not found.");
+                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Invalid password.");
             }
 
             (string accessToken, string refreshToken) = await _tokenGenerator.GenerateToken(user);

@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using PaymentGatewayApp.Server.DatabaseContext;
 using Serilog;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace PaymentGatewayApp.Server.Dependencies
 {
@@ -19,6 +20,8 @@ namespace PaymentGatewayApp.Server.Dependencies
         {
             services.AddSwaggerConfiguration();
             services.AddDatabaseProvider(configuration);
+            services.AddPasswordHash(configuration);
+            services.AddScoped<ISeedService, SeedServices>();
             services.AddAuth(configuration);
             services.AddRabbmitMQConfiguration(configuration);
             services.AddScoped<IPaymentTransactionService, PaymentTransactionService>();
@@ -144,6 +147,14 @@ namespace PaymentGatewayApp.Server.Dependencies
                 .CreateLogger();
             // Register Serilog as the logging provider without disposing it on shutdown
             services.AddSerilog(Log.Logger, dispose: false);
+            return services;
+        }
+        public static IServiceCollection AddPasswordHash(this IServiceCollection services, ConfigurationManager configuration)
+        {
+            var passwordHashSettings = new PasswordHashSettings();
+            configuration.Bind(PasswordHashSettings.SectionName, passwordHashSettings);
+            services.AddSingleton(Options.Create(passwordHashSettings));
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
             return services;
         }
     }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.RateLimiting;
 using PaymentGatewayApp.Server.Dependencies;
+using PaymentGatewayApp.Server.Interfaces;
 using PaymentGatewayApp.Server.Middlewares;
 using Serilog;
 using System.Threading.RateLimiting;
@@ -111,6 +112,16 @@ app.UseSpa(spa =>
         spa.UseProxyToSpaDevelopmentServer("http://localhost:60371");
     }
 });
+
+// Create a scope to access application services.
+// Get the seed service and run it to add initial data to the database
+// (like default users or roles) when the app starts.
+using (var scope = app.Services.CreateScope())
+{
+    var seedService = scope.ServiceProvider.GetRequiredService<ISeedService>();
+    await seedService.SeedAsync();
+}
 // Middleware Orders: Serve static > log > secure > route > auth > handle > map endpoints > serve SPA.
+
 app.Run();
 
