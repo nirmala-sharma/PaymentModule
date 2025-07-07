@@ -86,7 +86,12 @@ export class PaymentProcessComponent implements OnInit {
                     }
                 },
                 error: (error) => {
-                    alert('Payment process failed.');
+                    const errors = error?.error?.errors;
+                    if (errors && Array.isArray(errors)) {
+                        alert('Validation Errors: ' + errors);
+                    } else {
+                        alert('Payment process failed.');
+                    }
                 }
             });
         }

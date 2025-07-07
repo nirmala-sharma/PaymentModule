@@ -7,6 +7,7 @@ using PaymentGatewayApp.Server.Interfaces;
 using PaymentGatewayApp.Server.Model;
 using PaymentGatewayApp.Server.Requests;
 using PaymentGatewayApp.Server.Services;
+using PaymentGatewayApp.Server.Validators;
 
 namespace PaymentGatewayApp.Server.Controllers
 {
@@ -34,6 +35,15 @@ namespace PaymentGatewayApp.Server.Controllers
         [HttpPost("ProcessPayment")]
         public async Task<IActionResult> ProcessPayment([FromBody] PaymentRequests request)
         {
+            var validator = new PaymentRequestValidator();
+            var validationResult = validator.Validate(request);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(e => e.ErrorMessage);
+                _logger.LogError(string.Join(",", errors));
+                return BadRequest(new { Errors = errors });
+            }
             try
             {
                 // Validate the presence and integrity of the Idempotency-Key in the request header
