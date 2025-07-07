@@ -32,6 +32,8 @@ It includes a robust Payment Module designed with event-driven architecture to e
 
 **12. Rate Limiting** – Applies IP-based request limits using Fixed Window strategy to prevent API overuse. Allows 1 request per minute with 1 queued request, returning HTTP 429 when exceeded.
 
+**13. Database Seed Service** – Initializes the database with default user records on application startup. Helps automate setup for development, testing, or first-time deployments.
+
 ****
 **Technology Used:**
 .Net8.0
