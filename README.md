@@ -2,9 +2,9 @@
 ****
 **🌐 Project Overview**
 
-This project presents a full-featured payment gateway simulation, built using modern architectural principles and best practices across both backend and frontend.
+This project presents a full-featured **payment gateway simulation**, built using modern architectural principles and best practices across both backend and frontend.
 
-It includes a robust Payment Module designed with event-driven architecture to efficiently process transactions, seamlessly integrate with a simulated third-party API, and handle asynchronous events such as transaction status updates — all while ensuring reliability, scalability, and resilience.
+It includes a robust **Payment Module** designed with **event-driven architecture** to efficiently process transactions, seamlessly integrate with a **simulated third-party API**, and handle **asynchronous events** such as transaction status updates — all while ensuring reliability, scalability, and resilience.
 
 **This Project Consists of:**
 ** **
