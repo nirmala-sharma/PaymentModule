@@ -8,31 +8,33 @@ It includes a robust Payment Module designed with event-driven architecture to e
 
 **This Project Consists of:**
 ** **
-**1. PaymentGatewayMockAPI** — A mock third-party payment API to simulate real-world payment processing.
+**1. PaymentGatewayMockAPI** — A **mock third-party payment API** to simulate real-world payment processing.
 
 **2. PaymentGatewayWebAPI** – Main backend API handling payment processing, idempotency, transaction logging, and event publishing.
 
-**3. Event-Driven Architecture** — Utilizes RabbitMQ for asynchronous message handling between services.
+**3. Event-Driven Architecture** — Utilizes **RabbitMQ** for **asynchronous** message handling between services.
 
-**4. Authentication & Authorization** — Implements secure user identity management using **JWT-based access and refresh tokens**, ensuring safe and seamless authentication throughout the application.
+**4. Authentication & Authorization** — Implements **secure user identity** management using **JWT-based access and refresh tokens**, ensuring safe and seamless authentication throughout the application.
 
-**5. Logging** — Integrated Serilog for structured and detailed application logs.
+**5. Logging** — Integrated **Serilog** for structured and detailed **application logs**.
 
-**6. Global Exception Handling** — Centralized error handling for consistent API responses.
+**6. Global Exception Handling** — **Centralized error handling** for consistent API responses.
 
-**7. Retry Policy** — Implements automatic retries using Polly to handle transient failures.
+**7. Retry Policy** — Implements **automatic retries** using **Polly** to handle **transient failures**.
 
-**8. Idempotency Support** — Prevents duplicate payment processing through idempotent request handling.
+**8. Idempotency Support** — Prevents **duplicate payment processing** through idempotent request handling.
 
 **9. PaymentGatewayApp (Angular)** — Frontend client built with Angular, supporting secure token management, form submission, and graceful error handling.
 
-**10. Unit Testing** – Includes backend unit tests using xUnit, covering core services and controller logic to ensure reliability.
+**10. Unit Testing** – Includes backend unit tests using **xUnit**, covering core services and controller logic to ensure **reliability**.
 
-**11. CORS Support** – Enables secure cross-origin requests between frontend (Angular) and backend (.NET API).
+**11. CORS Support** – Enables secure **cross-origin request**s between frontend (Angular) and backend (.NET API).
 
-**12. Rate Limiting** – Applies IP-based request limits using Fixed Window strategy to prevent API overuse. Allows 1 request per minute with 1 queued request, returning HTTP 429 when exceeded.
+**12. Rate Limiting** – Applies **IP-based request limits** using Fixed Window strategy to prevent **API overuse**. Allows 1 request per minute with 1 queued request, returning HTTP 429 when exceeded.
 
 **13. Database Seed Service** – Initializes the database with default user records on application startup. Helps automate setup for development, testing, or first-time deployments.
+
+**14. SignalR Integration** – Enables **real-time communication** between server and clients for instant payment status updates. Improves user experience by providing **live feedback** during payment processing without **page refreshes** or polling.
 
 ****
 **Technology Used:**
