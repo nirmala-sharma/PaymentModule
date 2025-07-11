@@ -10,7 +10,6 @@ import { TokenRequest_DTO } from '../DTOs/token-request.dto';
     templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
-
     loginForm!: FormGroup;
     token: TokenRequest_DTO = new TokenRequest_DTO();
     constructor(private fb: FormBuilder, private router: Router, private apiService: ApiService, public authService: AuthService) {

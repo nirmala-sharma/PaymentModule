@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../service/api.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { SignalRService } from '../service/signalr.service';
 
 @Component({
     selector: 'app-payment-process',
@@ -12,8 +13,9 @@ export class PaymentProcessComponent implements OnInit {
     PaymentModes = ['Card', 'Bank'];
     SelectedPaymentMode: string = '';
     @Output('payment-response-callback') PaymentResponseCallBack = new EventEmitter<object>();
+    statusMessage: string = '';
 
-    constructor(private fb: FormBuilder, private apiService: ApiService, private sanitizer: DomSanitizer) {
+    constructor(private fb: FormBuilder, private apiService: ApiService, private sanitizer: DomSanitizer, private signalRService: SignalRService) {
         this.checkoutForm = this.fb.group({
             FullName: ['', Validators.required],
             Email: ['', [Validators.required, Validators.email]],
@@ -74,6 +76,15 @@ export class PaymentProcessComponent implements OnInit {
             if (!idempotencyKey) {
                 this.generateIdempotentKey();
             }
+
+            // Establish a real-time SignalR connection with the server.
+            // Listen for live payment status updates pushed by the server
+            // and update the statusMessage variable accordingly (e.g., "Processing", "Success", "Failed").
+            this.signalRService.startConnection();
+            this.signalRService.onPaymentStatus((msg: string) => {
+                this.statusMessage = msg;
+            });
+
             this.apiService.processPayment(this.checkoutForm.value).subscribe({
                 next: (response: any) => {
                     if (response) {

@@ -13,6 +13,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddService(builder.Configuration);
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 
 // Configure rate limiting to allow 1 request per minute per IP.
 // If the limit is exceeded, 1 request can wait in queue; others are rejected with 429 status code.
@@ -96,7 +97,12 @@ app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseEndpoints(endpoint =>
 {
+    // Maps controller routes (e.g., API endpoints)
     endpoint.MapControllers();
+
+    // Maps the SignalR ChatHub to the specified route
+    // Clients will connect to this hub at /api/ChatHub
+    endpoint.MapHub<ChatHub>("/api/ChatHub");
 });
 
 // Integrate Angular SPA with the backend during development.
