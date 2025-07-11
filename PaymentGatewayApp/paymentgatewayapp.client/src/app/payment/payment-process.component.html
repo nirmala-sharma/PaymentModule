@@ -5,36 +5,36 @@
                 <div class="card-body">
                     <h3 class="text-center">Payment Checkout</h3>
                     <form [formGroup]="checkoutForm" (ngSubmit)="submitPayment()">
-                        <div class="mb-1">
-                            <label>Customer Name</label>
+                        <div style="margin-bottom: 5px;">
+                            <label>Customer Name:</label>
                             <input type="text" class="form-control" formControlName="FullName">
                             <div *ngIf="checkoutForm.get('FullName')?.invalid && checkoutForm.get('FullName')?.touched" class="text-danger">
                                 Name is required.
                             </div>
                             <!-- <div [innerHTML]="getSanitizedHtml()"></div> -->
                         </div>
-                        <div class="mb-1">
-                            <label>Email</label>
+                        <div style="margin-bottom: 5px;">
+                            <label>Email:</label>
                             <input type="email" class="form-control" formControlName="Email">
                             <div *ngIf="checkoutForm.get('Email')?.invalid && checkoutForm.get('Email')?.touched" class="text-danger">
                                 Valid Email is required.
                             </div>
                         </div>
-                        <div class="mb-1">
-                            <label>Currency</label>
+                        <div style="margin-bottom: 5px;">
+                            <label>Currency:</label>
                             <input type="text" class="form-control" formControlName="Currency">
                             <div *ngIf="checkoutForm.get('Currency')?.invalid && checkoutForm.get('Currency')?.touched" class="text-danger">
                                 Currency is required.
                             </div>
                         </div>
-                        <div class="mb-1">
-                            <label>Amount</label>
+                        <div style="margin-bottom: 5px;">
+                            <label>Amount:</label>
                             <input type="text" class="form-control" formControlName="Amount">
                             <div *ngIf="checkoutForm.get('Amount')?.invalid && checkoutForm.get('Amount')?.touched" class="text-danger">
                                 Amount is required.
                             </div>
                         </div>
-                        <div class="mb-3">
+                        <div style="margin-bottom: 5px;">
                             <label for="paymentMode">Payment Mode:</label>
                             <select class="form-control" id="paymentMode" formControlName="PaymentMode" required>
                                 <option value="">Select Payment Mode</option>
@@ -44,39 +44,39 @@
                                 PaymentMode is required.
                             </div>
                         </div>
-                        <div class="mb-3" *ngIf="SelectedPaymentMode === 'Card'">
+                        <div style="margin-bottom: 5px;" *ngIf="SelectedPaymentMode === 'Card'">
                             <div class="mb-1">
-                                <label>Card Number</label>
+                                <label>Card Number:</label>
                                 <input type="number" class="form-control" formControlName="CardNumber">
                                 <div *ngIf="checkoutForm.get('CardNumber')?.invalid && checkoutForm.get('CardNumber')?.touched" class="text-danger">
                                     Card Number must be 16 digits.
                                 </div>
                             </div>
-                            <div class="mb-1">
-                                <label>Expiry Date (MM/YY)</label>
+                            <div style="margin-bottom: 5px;">
+                                <label>Expiry Date (MM/YY):</label>
                                 <input type="text" class="form-control" formControlName="ExpiryDate">
                                 <div *ngIf="checkoutForm.get('ExpiryDate')?.invalid && checkoutForm.get('ExpiryDate')?.touched" class="text-danger">
                                     Format: MM/YY
                                 </div>
                             </div>
-                            <div class="mb-1">
-                                <label>CVV</label>
+                            <div style="margin-bottom: 5px;">
+                                <label>CVV:</label>
                                 <input type="number" class="form-control" formControlName="CVV">
                                 <div *ngIf="checkoutForm.get('CVV')?.invalid && checkoutForm.get('CVV')?.touched" class="text-danger">
                                     CVV must be 3 digits.
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3" *ngIf="SelectedPaymentMode === 'Bank'">
+                        <div style="margin-bottom: 5px;" *ngIf="SelectedPaymentMode === 'Bank'">
                             <div class="mb-1">
-                                <label>Bank Name</label>
+                                <label>Bank Name:</label>
                                 <input type="text" class="form-control" formControlName="BankName">
                                 <div *ngIf="checkoutForm.get('BankName')?.invalid && checkoutForm.get('BankName')?.touched" class="text-danger">
                                     Bank Name is required.
                                 </div>
                             </div>
-                            <div class="mb-1">
-                                <label>Account Number</label>
+                            <div style="margin-bottom: 5px;">
+                                <label>Account Number:</label>
                                 <input type="text" class="form-control" formControlName="AccountNumber">
                                 <div *ngIf="checkoutForm.get('AccountNumber')?.invalid && checkoutForm.get('AccountNumber')?.touched" class="text-danger">
                                     AccountNumber is required.
@@ -86,6 +86,8 @@
 
                         <button class="btn btn-success w-100" [disabled]="checkoutForm.invalid">Pay</button>
                     </form>
+                    <div *ngIf="statusMessage" class="alert alert-info text-center" style="color:blue;">
+                        {{ statusMessage }} </div>
                 </div>
             </div>
         </div>
