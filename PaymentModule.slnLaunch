@@ -4,11 +4,13 @@
     "Projects": [
       {
         "Path": "PaymentGatewayMockAPI\\PaymentGatewayMockAPI.csproj",
-        "Action": "Start"
+        "Action": "Start",
+        "DebugTarget": "IIS Express"
       },
       {
         "Path": "PaymentGatewayApp\\PaymentGatewayApp.Server\\PaymentGatewayApp.Server.csproj",
-        "Action": "Start"
+        "Action": "Start",
+        "DebugTarget": "IIS Express"
       }
     ]
   }

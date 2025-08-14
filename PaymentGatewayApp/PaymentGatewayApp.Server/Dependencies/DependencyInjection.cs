@@ -108,7 +108,8 @@ namespace PaymentGatewayApp.Server.Dependencies
                 // Create Connection with the RabbitMQ server
                 var factory = new ConnectionFactory()
                 {
-                    HostName = "localhost",
+                    HostName = "rabbitmq",
+                    //"localhost",
                     Port = 5672,
                     UserName = "guest",
                     Password = "guest"
@@ -131,11 +132,23 @@ namespace PaymentGatewayApp.Server.Dependencies
         }
         public static IServiceCollection AddDatabaseProvider(this IServiceCollection services, ConfigurationManager configuration)
         {
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            var connectionString = env == "Development"
+                ? configuration.GetConnectionString("DefaultConnection") // local
+                : configuration.GetConnectionString("DockerConnection"); // docker or prod
+
             services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
+
+            return services;
+            /*services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
-            return services;
+            return services;*/
         }
         /// <summary>
         /// Configures Serilog and adds it to the service collection.

@@ -40,7 +40,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngularClient",
         policy =>
         {
-            policy.WithOrigins("http://localhost:60371") // Frontend dev server URL
+            policy.WithOrigins("http://localhost:60371", "http://localhost", "http://localhost:80", "http://localhost:5002", "http://localhost:4200") // Frontend dev server URL
                   .AllowAnyMethod()                      // Allow all HTTP methods (GET, POST, etc.)
                   .AllowAnyHeader()                      // Allow any HTTP headers
                   .AllowCredentials();                   // Support sending cookies or auth headers
@@ -49,6 +49,14 @@ builder.Services.AddCors(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddSpaStaticFiles(configuration =>
+    {
+        configuration.RootPath = "../paymentgatewayapp.client/dist/paymentgatewayapp.client";
+    });
+}
 
 var app = builder.Build();
 

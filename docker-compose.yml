@@ -1,0 +1,60 @@
+services:
+  backend:
+    image: paymentmoduleserverimage:latest
+    container_name: paymentmoduleserver-container
+    ports:
+      - "5001:8080"
+    environment:
+      - RabbitMQ__HostName=rabbitmq
+      - RabbitMQ__UserName=guest
+      - RabbitMQ__Password=guest
+      - RabbitMQ__Port=5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - payment-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # AMQP
+      - "15672:15672"   # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      # This is the key change. We use rabbitmq-diagnostics to verify port connectivity,
+      # which is a more reliable check than just `rabbitmqctl status`.
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # This `start_period` gives the container a grace period to start up
+      # without failing the health check immediately.
+      start_period: 20s
+    networks:
+      - payment-network
+
+  client:
+    image: paymentmoduleclientapp:latest
+    container_name: paymentmoduleclient-container
+    ports:
+      - "5002:80"
+    depends_on:
+      - backend
+    networks:
+      - payment-network
+
+  mockapi:
+    image: paymentmodulemockapiimage:latest
+    container_name: paymentgatewaymockapi-container
+    ports:
+      - "5005:8080"
+    networks:
+      - payment-network
+
+networks:
+  payment-network:
+    driver: bridge
