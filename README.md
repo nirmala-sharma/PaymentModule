@@ -44,35 +44,12 @@ It includes a robust **Payment Module** designed with **event-driven architectur
 , Typescript: 4.7.4
 , npm 8.11.0 
 
-****
-**⚙️ How to Set Up This Solution :**
-
-1. Clone the project repository to your local machine.
-
-2. Restore all backend dependencies using your IDE or .NET CLI.
-
-3. Update configuration files (appsettings.json) :
-
- - Database connection string
-
- - RabbitMQ credentials
-
- - Serilog logging settings
-
-4. Build and run the .NET solution to automatically create the database and required tables.
-
-5. Install frontend dependencies in the Angular project.
-
-6. Build and run the Angular application
-   
-7. Access the application in your browser and begin testing.
-
-   ****
+  ****
 
    # 🐳 Dockerized Payment Module
 
 This project is fully containerized using **Docker** and **Docker Compose**.  
-Prebuilt images are available on **Docker Hub**, so you can run the entire stack without building locally.
+Pre-built images are available on **Docker Hub**, so you can run the entire stack without building locally.
 
 ---
 
@@ -103,6 +80,30 @@ Clone this repository and run:
 ```bash
 docker compose up -d
 
+```
+** **
+
+**⚙️ Development Setup (Without Docker) :**
+
+1. Clone the project repository to your local machine.
+
+2. Restore all backend dependencies using your IDE or .NET CLI.
+
+3. Update configuration files (appsettings.json) :
+
+ - Database connection string
+
+ - RabbitMQ credentials
+
+ - Serilog logging settings
+
+4. Build and run the .NET solution to automatically create the database and required tables.
+
+5. Install frontend dependencies in the Angular project.
+
+6. Build and run the Angular application
+   
+7. Access the application in your browser and begin testing.
 
 
 
