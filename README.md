@@ -101,7 +101,7 @@ Prebuilt images are available on **Docker Hub**, so you can run the entire stack
 Clone this repository and run:
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.hub.yml up -d
+docker compose up -d
 
 
 
