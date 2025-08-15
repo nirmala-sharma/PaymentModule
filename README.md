@@ -63,6 +63,47 @@ It includes a robust **Payment Module** designed with **event-driven architectur
 
 5. Install frontend dependencies in the Angular project.
 
-6. Build and run the Angular application 
-
+6. Build and run the Angular application
+   
 7. Access the application in your browser and begin testing.
+
+   ****
+
+   # 🐳 Dockerized Payment Module
+
+This project is fully containerized using **Docker** and **Docker Compose**.  
+Prebuilt images are available on **Docker Hub**, so you can run the entire stack without building locally.
+
+---
+
+## 📦 Architecture & Services
+
+1. **PaymentGatewayMockAPI**  
+   A mock third-party payment API to simulate real-world payment processing.  
+   **Docker Hub:** (https://hub.docker.com/repository/docker/niru0102sharma/paymentmodulemockapiimage)
+
+2. **PaymentGatewayWebAPI**  
+   Main backend API handling payment processing, idempotency, transaction logging, and event publishing.  
+   **Docker Hub:**(https://hub.docker.com/repository/docker/niru0102sharma/paymentmoduleserverimage)
+
+3. **Client Application**  
+   Frontend interface for interacting with the payment gateway system.  
+   **Docker Hub:** (https://hub.docker.com/repository/docker/niru0102sharma/paymentmoduleclientapp)
+
+4. **Event-Driven Architecture with RabbitMQ**  
+   Utilizes RabbitMQ for asynchronous message handling between services.  
+   Uses the official `rabbitmq:3-management` image from Docker Hub.
+
+---
+
+## 🖥️ Run the Stack with Docker Compose
+
+Clone this repository and run:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.hub.yml up -d
+
+
+
+
+
