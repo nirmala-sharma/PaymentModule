@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.RateLimiting;
+using PaymentGatewayApp.Server.Configurations;
 using PaymentGatewayApp.Server.Dependencies;
 using PaymentGatewayApp.Server.Interfaces;
 using PaymentGatewayApp.Server.Middlewares;
@@ -10,6 +11,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Register HttpClientFactory
 builder.Services.AddHttpClient();
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
+builder.Services.AddRabbmitMQConfiguration(builder.Configuration);
+
+builder.Services.Configure<DemoPaymentAPISettings>(
+    builder.Configuration.GetSection(DemoPaymentAPISettings.SectionName)
+);
 builder.Services.AddService(builder.Configuration);
 
 builder.Services.AddControllers();

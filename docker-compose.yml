@@ -9,6 +9,7 @@ services:
       - RabbitMQ__UserName=guest
       - RabbitMQ__Password=guest
       - RabbitMQ__Port=5672
+      - DOTNET_ENVIRONMENT=Docker
     depends_on:
       rabbitmq:
         condition: service_healthy
