@@ -58,7 +58,7 @@ namespace PaymentGatewayApp.Server.Services
             var result = await tcs.Task;
             // Once the publisher consume the message then it Stop sending messages to this specific consumer , Basically it was done because
             // correlationId again updated to previous correlationId not the latest one so it is not giving the output
-            _channel.BasicCancel(consumerTag);  
+            _channel.BasicCancel(consumerTag);
             return result;
         }
     }

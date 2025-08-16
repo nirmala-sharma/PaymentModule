@@ -108,10 +108,10 @@ namespace PaymentGatewayApp.Server.Dependencies
                 // Create Connection with the RabbitMQ server
                 var factory = new ConnectionFactory()
                 {
-                    HostName = "localhost",
-                    Port = 5672,
-                    UserName = "guest",
-                    Password = "guest"
+                    HostName = options.HostName, // automatically localhost or rabbitmq
+                    Port = options.Port,
+                    UserName = options.UserName,
+                    Password = options.Password
                 };
 
                 return factory.CreateConnection();
@@ -135,6 +135,7 @@ namespace PaymentGatewayApp.Server.Dependencies
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
+
             return services;
         }
         /// <summary>

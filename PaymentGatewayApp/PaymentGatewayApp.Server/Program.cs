@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.RateLimiting;
+using PaymentGatewayApp.Server.Configurations;
 using PaymentGatewayApp.Server.Dependencies;
 using PaymentGatewayApp.Server.Interfaces;
 using PaymentGatewayApp.Server.Middlewares;
@@ -10,6 +11,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Register HttpClientFactory
 builder.Services.AddHttpClient();
+
+// Load settings based on environment and use them for RabbitMQ
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables();
+
+builder.Services.AddRabbmitMQConfiguration(builder.Configuration);
+
+builder.Services.Configure<DemoPaymentAPISettings>(
+    builder.Configuration.GetSection(DemoPaymentAPISettings.SectionName)
+);
 builder.Services.AddService(builder.Configuration);
 
 builder.Services.AddControllers();
@@ -40,7 +53,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngularClient",
         policy =>
         {
-            policy.WithOrigins("http://localhost:60371") // Frontend dev server URL
+            // Allow requests from these localhost origins
+            policy.WithOrigins("http://localhost:60371", "http://localhost", "http://localhost:80", "http://localhost:5002", "http://localhost:4200") 
                   .AllowAnyMethod()                      // Allow all HTTP methods (GET, POST, etc.)
                   .AllowAnyHeader()                      // Allow any HTTP headers
                   .AllowCredentials();                   // Support sending cookies or auth headers
@@ -49,6 +63,17 @@ builder.Services.AddCors(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Use Angular build files only in non-development environments.
+// In development, Angular runs separately with ng serve for hot reload & debugging,
+// but in staging/production, we serve the pre-built dist files via ASP.NET Core.
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddSpaStaticFiles(configuration =>
+    {
+        configuration.RootPath = "../paymentgatewayapp.client/dist/paymentgatewayapp.client";
+    });
+}
 
 var app = builder.Build();
 
