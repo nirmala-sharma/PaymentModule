@@ -1,61 +1,60 @@
+# Docker Compose allows coordination of multiple containers managing their networks, ports, and dependencies, so the entire application can 
+# run together seamlessly from a single configuration file.
+
 services:
   backend:
-    image: paymentmoduleserverimage:latest
+    image: paymentmoduleserverimage:latest     # Backend server image
     container_name: paymentmoduleserver-container
     ports:
-      - "5001:8080"
+      - "5001:8080"                            # Expose backend on host port 5001
     environment:
-      - RabbitMQ__HostName=rabbitmq
-      - RabbitMQ__UserName=guest
-      - RabbitMQ__Password=guest
-      - RabbitMQ__Port=5672
-      - DOTNET_ENVIRONMENT=Docker
+      - RabbitMQ__HostName=rabbitmq            # RabbitMQ hostname (container name)
+      - RabbitMQ__UserName=guest               # RabbitMQ username
+      - RabbitMQ__Password=guest               # RabbitMQ password
+      - RabbitMQ__Port=5672                    # RabbitMQ AMQP port
+      - DOTNET_ENVIRONMENT=Docker              # Set environment for .NET app
     depends_on:
       rabbitmq:
-        condition: service_healthy
+        condition: service_healthy             # Wait until RabbitMQ is healthy
     networks:
-      - payment-network
+      - payment-network                        # Connect to shared network
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:3-management               # RabbitMQ with management UI
     container_name: rabbitmq
     ports:
-      - "5672:5672"     # AMQP
-      - "15672:15672"   # Management UI
+      - "5672:5672"     # AMQP port for communication
+      - "15672:15672"   # Management UI port
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: guest             # Default username
+      RABBITMQ_DEFAULT_PASS: guest             # Default password
     healthcheck:
-      # This is the key change. We use rabbitmq-diagnostics to verify port connectivity,
-      # which is a more reliable check than just `rabbitmqctl status`.
-      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"] # Reliable health check
       interval: 10s
       timeout: 5s
       retries: 5
-      # This `start_period` gives the container a grace period to start up
-      # without failing the health check immediately.
-      start_period: 20s
+      start_period: 20s   # Grace period for startup which allows RabbitMQ enough time to start before health checks begin so the health check doesn’t fail too early
     networks:
       - payment-network
 
   client:
-    image: paymentmoduleclientapp:latest
+    image: paymentmoduleclientapp:latest       # Angular client app image
     container_name: paymentmoduleclient-container
     ports:
-      - "5002:80"
+      - "5002:80"                              # Expose client on host port 5002
     depends_on:
-      - backend
+      - backend                                # Start after backend is ready
     networks:
       - payment-network
 
   mockapi:
-    image: paymentmodulemockapiimage:latest
+    image: paymentmodulemockapiimage:latest    # Mock 3rd party API image
     container_name: paymentgatewaymockapi-container
     ports:
-      - "5005:8080"
+      - "5005:8080"                            # Expose mock API on port 5005
     networks:
       - payment-network
 
 networks:
   payment-network:
-    driver: bridge
+    driver: bridge                             # Bridge network for container communication

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -8,10 +7,4 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent {
   title = 'PaymentApp';
-  private apiUrl = environment.apiUrl;
-  constructor() {
-    console.log('Using API:', environment.apiUrl); 
-
-  }
-
 }
