@@ -19,7 +19,8 @@ namespace PaymentAppTestProject
         private readonly Mock<IJWTTokenGenerator> _mockTokenGenerator;
         private readonly Mock<ILogger<AuthenticationController>> _mockLogger;
         private readonly ApplicationDbContext _dbContext;
-
+        private readonly Mock<IPasswordHasher> _mockPasswordHasher;  
+        
         public AuthControllerTests()
         {
             // Create in-memory database context
@@ -33,13 +34,15 @@ namespace PaymentAppTestProject
             _mockAuthService = new Mock<IAuthenticationService>();  // Creates a fake version of the IAuthenticationService
             _mockTokenGenerator = new Mock<IJWTTokenGenerator>();
             _mockLogger = new Mock<ILogger<AuthenticationController>>();
+            _mockPasswordHasher = new Mock<IPasswordHasher>();  
 
             // Create controller
             _controller = new AuthenticationController(
                 _mockAuthService.Object,
                 _mockTokenGenerator.Object,
                 _dbContext,
-                _mockLogger.Object
+                _mockLogger.Object,
+                _mockPasswordHasher.Object 
             );
 
             // Setup fake HttpContext for cookies
