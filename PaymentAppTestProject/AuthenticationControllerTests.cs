@@ -88,11 +88,12 @@ namespace PaymentAppTestProject
         public async Task Login_ValidUser_ReturnsAccessToken()
         {
             // Arrange
-            var loginRequest = new LoginRequest("niru", "niru123"); ;
-            var user = new User { UserName = "niru", PasswordHash = "niru123" };
-
-            _mockAuthService.Setup(s => s.GetUserByUserName("niru")).ReturnsAsync(user);
-            _mockTokenGenerator.Setup(t => t.GenerateToken(user)).ReturnsAsync(("access123", "refresh456"));
+             var loginRequest = new LoginRequest("niru", "niru123");
+             var user = new User { UserName = "niru", PasswordHash = "niru123" };
+            
+             _mockAuthService.Setup(s => s.GetUserByUserName("niru")).ReturnsAsync(user);
+             _mockTokenGenerator.Setup(t => t.GenerateToken(user)).ReturnsAsync(("access123", "refresh456"));
+             _mockPasswordHasher.Setup(x => x.VerifyPassword("niru123", "niru123")).Returns(true);  
 
             // Act
             var result = await _controller.Login(loginRequest);
